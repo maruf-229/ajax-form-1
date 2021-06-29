@@ -19,6 +19,13 @@ class StudentController extends Controller
     {
         return view('students');
     }
+    public function fetchstudent()
+    {
+        $students=Student::all();
+        return response()->json([
+            'students'=>$students,
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.

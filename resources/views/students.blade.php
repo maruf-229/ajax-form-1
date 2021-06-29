@@ -61,7 +61,22 @@
                     </h4>
                 </div>
                 <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Namr</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Course</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -75,6 +90,33 @@
 
 <script>
     $(document).ready(function(){
+
+        fetchStudent();
+        function fetchStudent(){
+            $.ajax({
+                type:"GET",
+                url:"/fetch-students",
+                dataType:"json",
+                success:function (response){
+                    // console.log(response.students)
+                    $('tbody').html("");
+                    $.each(response.students,function (key,item){
+                        $('tbody').append(
+                           '<tr>\
+                                <td>'+item.id+'</td>\
+                                <td>'+item.name+'</td>\
+                                <td>'+item.email+'</td>\
+                                <td>'+item.phone+'</td>\
+                                <td>'+item.course+'</td>\
+                                <td><button type="button" value="'+item.id+'" class="edit_student btn btn-primary btn-sm">Editt</button></td>\
+                                <td><button type="button" value="'+item.id+'" class="delete_student btn btn-danger btn-sm">Delete</button></td>\
+                            </tr>'
+                        );
+                    });
+                }
+            });
+        }
+
         $(document).on('click','.add_student',function (e){
             e.preventDefault();
             var data={
@@ -110,6 +152,7 @@
                         $('#success_message').text(response.message)
                         $('#AddStudentModal').modal('hide');
                         $('#AddStudentModal').find('input').val("");
+                        fetchStudent();
                     }
                 }
             });
