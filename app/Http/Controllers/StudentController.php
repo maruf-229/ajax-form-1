@@ -87,11 +87,23 @@ class StudentController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Student $student)
+    public function edit($id)
     {
-        //
+        $student=Student::find($id);
+        if ($student){
+            return response()->json([
+                'status'=>200,
+                'student'=>$student,
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Student not found',
+            ]);
+        }
     }
 
     /**
@@ -99,21 +111,44 @@ class StudentController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, $id)
     {
-        //
+        $student=Student::find($id);
+        if ($student){
+            $student->name=$request->input('name');
+            $student->email=$request->input('email');
+            $student->phone=$request->input('phone');
+            $student->course=$request->input('course');
+            $student->update();
+            return response()->json([
+                'status'=>200,
+                'message'=>'Student Updated Successfully',
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=>404,
+                'message'=>'Student not found',
+            ]);
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Student $student)
+    public function destroy($id)
     {
-        //
+        $student=Student::where('id',$id)->first();
+        $student->delete();
+        return response()->json([
+            'status'=>200,
+            'message'=>'Student Deleted Successfully',
+        ]);
     }
 }
