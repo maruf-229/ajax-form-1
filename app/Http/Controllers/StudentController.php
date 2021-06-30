@@ -151,4 +151,11 @@ class StudentController extends Controller
             'message'=>'Student Deleted Successfully',
         ]);
     }
+
+    public function autocomplete(Request $request){
+        $datas=Student::select("name")
+            ->where("name","LIKE","%{$request->terms}%")
+            ->get();
+        return response()->json($datas);
+    }
 }

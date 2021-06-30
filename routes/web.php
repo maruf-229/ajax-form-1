@@ -9,6 +9,7 @@ Route::post('students',[StudentController::class,'store']);
 Route::get('edit-student/{id}',[StudentController::class,'edit']);
 Route::put('update-student/{id}',[StudentController::class,'update']);
 Route::post('delete-student/{id}',[StudentController::class,'destroy']);
+Route::get('/autocomplete',[StudentController::class,'autocomplete'])->name('autocomplete');
 
 Route::get('/', function () {
     return view('welcome');
