@@ -7,6 +7,8 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Image;
 
 class StudentController extends Controller
 {
@@ -64,6 +66,25 @@ class StudentController extends Controller
             $student->email=$request->input('email');
             $student->phone=$request->input('phone');
             $student->course=$request->input('course');
+
+        if($request->hasFile('image')){
+            $completeFileName=$request->file('image')->getClientOriginalName();
+            // dd($completeFileName);
+            $fileNameOnly=pathinfo($completeFileName,PATHINFO_FILENAME);
+            $extenshion=$request->file('image')->getClientOriginalExtension();
+            // dd($extenshion);
+            $comPic=str_replace('','_',$fileNameOnly).'-'.rand().'_'.time().'.'.$extenshion;
+            // dd($comPic);
+            $path=$request->file('image')->storeAs('public/posts',$comPic);
+            $student->image=$comPic;
+        }
+//        if($student->save()){
+//            return['status'=>true,'message'=>'Post saved successfully'];
+//        }
+//        else{
+//            return['status'=>false,'message'=>'Something went wrong'];
+//        }
+
             $student->save();
             return response()->json([
                 'status'=>200,

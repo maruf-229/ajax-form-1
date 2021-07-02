@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <title>Document</title>
 </head>
 <body>
@@ -20,31 +20,54 @@
         <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-          <ul id="saveform_errlist"></ul>
 
-        <div class="form group mb-3">
-            <label for="">Student Name</label>
-            <input type="text" class="name form-control">
-        </div>
-        <div class="form group mb-3">
-            <label for="">Email</label>
-            <input type="email" class="email  form-control">
-        </div>
+{{--            @csrf--}}
+            <div class="modal-body">
+                <ul id="saveform_errlist"></ul>
 
-        <div class="form group mb-3">
-            <label for="">Phone</label>
-            <input type="number" class="phone form-control">
-        </div>
-        <div class="form group mb-3">
-            <label for="">Course</label>
-            <input type="text" class="course form-control">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary add_student">Save</button>
-      </div>
+                <div class="form group mb-3">
+                    <label for="">Student Name</label>
+                    <input type="text" class="name form-control">
+                </div>
+                <div class="form group mb-3">
+                    <label for="">Email</label>
+                    <input type="email" class="email  form-control">
+                 </div>
+
+                <div class="form group mb-3">
+                     <label for="">Phone</label>
+                     <input type="number" class="phone form-control">
+                </div>
+                <div class="form group mb-3">
+                    <label for="">Course</label>
+                    <input type="text" class="course form-control">
+                </div>
+                <div class="form group mb-3">
+                    <form id="addPostForm" enctype="multipart/form-data" action="">
+                        @csrf
+                        <div class="upload-imgs">
+                            <div class="img-upload-row">
+                                <div class="upload-column">
+                                    <input onchange="doAfterSelectImage(this)" type="file" name="image" id="image" style="display: none">
+                                    <label for="image" class="img-uploaders">
+                                        <img src="{{ asset('assets/images/placeholder.png') }}" alt="" height="100px" id="post_user_image">
+                                    </label>
+                                    <p>Post Screenshot</p>
+                                    <span style="display: none;" id="error_image">
+                                    <div class="alert alert-danger" role="start">Post is required</div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+{{--                        <button type="button" class="save_post_btn mt-4">Save Post</button>--}}
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary add_student">Save</button>
+            </div>
+
     </div>
   </div>
 </div>
@@ -121,7 +144,7 @@
                         <a href="#" data-bs-toggle="modal" data-bs-target="#AddStudentModal" class="btn btn-primary float-end btn-sm">Add Student</a>
                     </h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body ">
                     <form action="">
                         <div class="form-group">
                             <input type="text" class="form-control typeahead" placeholder="Search..."  />
@@ -135,11 +158,12 @@
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Course</th>
+                                <th>Image</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="postRecord">
 
                         </tbody>
                     </table>
@@ -154,35 +178,14 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" integrity="sha512-HWlJyU4ut5HkEj0QsK/IxBCY55n5ZpskyjVlAoV9Z7XQwwkqXoYdCIC93/htL3Gu5H3R4an/S0h2NXfbZk3g7w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ asset('assets/js/helpers.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js') }}"></script>
 
 <script>
     $(document).ready(function(){
 
         fetchStudent();
-        function fetchStudent(){
-            $.ajax({
-                type:"GET",
-                url:"/fetch-students",
-                dataType:"json",
-                success:function (response){
-                    // console.log(response.students)
-                    $('tbody').html("");
-                    $.each(response.students,function (key,item){
-                        $('tbody').append(
-                           '<tr>\
-                                <td>'+item.id+'</td>\
-                                <td>'+item.name+'</td>\
-                                <td>'+item.email+'</td>\
-                                <td>'+item.phone+'</td>\
-                                <td>'+item.course+'</td>\
-                                <td><button type="button" value="'+item.id+'" class="edit_student btn btn-primary btn-sm">Editt</button></td>\
-                                <td><button type="button" value="'+item.id+'" class="delete_student btn btn-danger btn-sm">Delete</button></td>\
-                            </tr>'
-                        );
-                    });
-                }
-            });
-        }
+
 
         $(document).on('click','.delete_student',function (e) {
             e.preventDefault();
@@ -313,6 +316,7 @@
                 'email':$('.email').val(),
                 'phone':$('.phone').val(),
                 'course':$('.course').val(),
+                'image':$('.image').val(),
             }
 
             $.ajaxSetup({
@@ -320,12 +324,13 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             $.ajax({
                 type:"POST",
                 url:"/students",
                 data:data,
                 dataType:"json",
+                // contentType: true,
+                // processData: true,
                 success:function (response){
                     // console.log(response.errors.name);
                     if (response.status==400){
@@ -346,6 +351,7 @@
                     }
                 }
             });
+
         });
     });
 </script>
@@ -359,6 +365,21 @@
             });
         }
     });
+</script>
+
+<script>
+    function doAfterSelectImage(input){
+        readURL(input);
+    }
+    function readURL(input){
+        if(input.files && input.files[0]){
+            var reader=new FileReader();
+            reader.onload=function(e){
+                $('#post_user_image').attr('src',e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 </script>
 
 </body>
