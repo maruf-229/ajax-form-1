@@ -20,8 +20,6 @@
         <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-
-{{--            @csrf--}}
             <div class="modal-body">
                 <ul id="saveform_errlist"></ul>
 
@@ -316,7 +314,6 @@
                 'email':$('.email').val(),
                 'phone':$('.phone').val(),
                 'course':$('.course').val(),
-                'image':$('.image').val(),
             }
 
             $.ajaxSetup({
@@ -365,21 +362,6 @@
             });
         }
     });
-</script>
-
-<script>
-    function doAfterSelectImage(input){
-        readURL(input);
-    }
-    function readURL(input){
-        if(input.files && input.files[0]){
-            var reader=new FileReader();
-            reader.onload=function(e){
-                $('#post_user_image').attr('src',e.target.result);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
 </script>
 
 </body>
